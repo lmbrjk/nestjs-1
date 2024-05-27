@@ -5,20 +5,12 @@ import { DatabaseModule } from '@app/database/database.module';
 import { TagModule } from '@app/tag/tag.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TagEntity } from '@app/tag/entities/tag.entity';
+import ormconfig from './ormconfig';
+import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forRoot({
-    type: 'mysql',
-    host: 'localhost',
-    port: 3306,
-    username: 'root',
-    password: '',
-    database: 'nest',
-    entities: [TagEntity],
-    // entities: [__dirname + '/**/*.entity{.ts,.js}'],
-    synchronize: true,
-  }), DatabaseModule, TagModule],
+    TypeOrmModule.forRoot(ormconfig), DatabaseModule, TagModule, UserModule],
   controllers: [AppController],
   providers: [AppService],
 })
