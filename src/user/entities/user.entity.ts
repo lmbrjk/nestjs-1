@@ -19,7 +19,9 @@ export class UserEntity {
     @Column({default: ''})
     image: string
 
-    @Column()
+    // исключаем из find() и findOne() password
+    // чтобы его добавить нужно будет применять select
+    @Column({select: false})
     password: string
 
     @BeforeInsert()
