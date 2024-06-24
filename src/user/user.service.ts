@@ -69,6 +69,14 @@ export class UserService {
         return isRightPassword
     }
 
+    getUserById(id: number): Promise<UserEntity>{
+        return this.userRepository.findOne({
+            where: {
+                id: id
+            }
+        })
+    }
+
     generateJwt(user: UserEntity): string {
         return sign({
             id: user.id,
