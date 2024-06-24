@@ -10,8 +10,6 @@ export class AuthMiddleware implements NestMiddleware {
     constructor(private readonly userService: UserService){}
 
     async use(req: RequestExpressInterface, res: Response, next: NextFunction) {
-        console.log(1111, req.headers)
-        
         // next() - попадаем дальше в контроллер
 
         if(!req.headers.authorization){
