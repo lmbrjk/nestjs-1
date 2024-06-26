@@ -8,6 +8,7 @@ import { JWT_SECRET } from "@app/config";
 import { UserResponseInterface } from "./types/userResponse.interface";
 import { AuthUserDto } from "./dto/authUser.dto";
 import { compare } from "bcrypt";
+import { UpdateUserDto } from "./dto/updateUser.dto";
 
 @Injectable()
 export class UserService {
@@ -62,6 +63,18 @@ export class UserService {
         delete userByEmail.password
 
         return userByEmail
+    }
+
+    async updateUser(userId: number, updateUserDto: UpdateUserDto): Promise<UserEntity> {
+        const userById = await this.getUserById(userId)
+
+        if(!userById){
+            throw new HttpException('there is no user with this ID', HttpStatus.UNPROCESSABLE_ENTITY)
+        }
+
+        Object.assign(userById, updateUserDto)
+        
+        return await this.userRepository.save(userById)
     }
 
     async hashPasswordComparison(password, passwordHashFromBase){
