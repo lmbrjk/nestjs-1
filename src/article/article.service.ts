@@ -1,4 +1,8 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class ArticleService {}
+export class ArticleService {
+  createArticle() {
+    return 'create article with createArticle';
+  }
+}
