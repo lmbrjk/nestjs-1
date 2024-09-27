@@ -46,6 +46,7 @@ export class ArticleEntity {
     this.updatedAt = new Date();
   }
 
-  @ManyToOne(() => UserEntity, (user) => user.articles)
+  // {eager: true} - чтобы каждый раз когда запрашивалась статья, подтягивались данные об авторе
+  @ManyToOne(() => UserEntity, (user) => user.articles, { eager: true })
   author: UserEntity;
 }
