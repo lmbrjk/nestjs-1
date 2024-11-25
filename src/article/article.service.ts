@@ -1,4 +1,5 @@
 import { CreateArticleDto } from '@app/dto/createArticle.dto';
+import { UpdateArticleDto } from '@app/dto/updateArticle.dto';
 import { UserEntity } from '@app/user/entities/user.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -52,6 +53,36 @@ export class ArticleService {
     }
 
     return await this.articleRepository.delete({ slug });
+  }
+
+  async updateArticle(
+    currentUserId: number,
+    slug: string,
+    updateArticleDto: UpdateArticleDto,
+  ): Promise<ArticleEntity> {
+    const currentArticle = await this.getArticleBySlug(slug);
+
+    if (!currentArticle) {
+      throw new HttpException('Article does not exist', HttpStatus.NOT_FOUND);
+    }
+
+    if (currentArticle.author.id !== currentUserId) {
+      throw new HttpException(
+        'Only the author can delete an article',
+        HttpStatus.FORBIDDEN,
+      );
+    }
+
+    if (updateArticleDto.title !== currentArticle.title) {
+      Object.assign(currentArticle, {
+        ...updateArticleDto,
+        slug: this.getSlug(updateArticleDto.title),
+      });
+    } else {
+      Object.assign(currentArticle, updateArticleDto);
+    }
+
+    return await this.articleRepository.save(currentArticle);
   }
 
   buildArticleResponse(article: ArticleEntity): ArticleResponseInterface {
