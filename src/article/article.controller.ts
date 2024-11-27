@@ -77,4 +77,17 @@ export class ArticleController {
 
     return this.articleService.buildArticleResponse(updatedArticle);
   }
+
+  @Post(':slug/favorite')
+  @UseGuards(AuthGuard)
+  async likeArticle(
+    @User('id') currentUserId: number,
+    @Param('slug') slug: string,
+  ): Promise<ArticleResponseInterface> {
+    const likeArticle = await this.articleService.likeArticle(
+      currentUserId,
+      slug,
+    );
+    return this.articleService.buildArticleResponse(likeArticle);
+  }
 }
