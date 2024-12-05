@@ -90,4 +90,17 @@ export class ArticleController {
     );
     return this.articleService.buildArticleResponse(likeArticle);
   }
+
+  @Delete(':slug/favorite')
+  @UseGuards(AuthGuard)
+  async dislikeArticle(
+    @User('id') currentUserId: number,
+    @Param('slug') slug: string,
+  ): Promise<ArticleResponseInterface> {
+    const likeArticle = await this.articleService.dislikeArticle(
+      currentUserId,
+      slug,
+    );
+    return this.articleService.buildArticleResponse(likeArticle);
+  }
 }

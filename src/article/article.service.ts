@@ -156,6 +156,30 @@ export class ArticleService {
     return article;
   }
 
+  async dislikeArticle(currentUserId: number, slug: string) {
+    const article = await this.getArticleBySlug(slug);
+
+    const user = await this.userRepository.findOne({
+      where: {
+        id: currentUserId,
+      },
+      relations: ['favorites'],
+    });
+
+    const favoriteArticleIndex = user.favorites.findIndex(
+      (articleInfavorites) => articleInfavorites.id === article.id,
+    );
+
+    if (favoriteArticleIndex >= 0) {
+      user.favorites.splice(favoriteArticleIndex, 1);
+      article.favoritesCount--;
+      await this.userRepository.save(user);
+      await this.articleRepository.save(article);
+    }
+
+    return article;
+  }
+
   buildArticleResponse(article: ArticleEntity): ArticleResponseInterface {
     return { article };
   }
